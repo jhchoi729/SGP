@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+    xmlns:websocket="http://www.springframework.org/schema/websocket"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+        
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+    <!-- Process annotations on registered beans like @Autowired... -->
+    <context:annotation-config/>
+    
+    <!-- Enables the Spring MVC @Controller programming model -->
+    <mvc:annotation-driven />
+	
+	<!-- 패키지 경로 -->
+    <context:component-scan base-package="org.kdea.spring.controller" />
+  	
+    <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+    <resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	    <beans:property name="prefix" value="/WEB-INF/views/" />
+	    <beans:property name="suffix" value=".jsp" />
+	    <beans:property name="contentType" value="text/html; charset=UTF-8"/>
+	    <beans:property name="order" value="0"/> 
+	</beans:bean>
+	
+	<!-- 타일즈 뷰 리졸버 선언 -->
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	    <beans:property name="viewClass">
+		    <beans:value>
+		    	org.springframework.web.servlet.view.tiles3.TilesView
+		    </beans:value>
+	    </beans:property>
+	    <beans:property name="order" value="1"/> <!-- 뷰 리졸버가 여러개면 순서를 정해서 돌려주어야함 -->
+	</beans:bean>
+	 
+	<!-- Tiles configuration -->
+	<beans:bean id="tilesConfigurer"
+	    class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+	    <beans:property name="definitions">
+	        <beans:list>
+	            <beans:value>/WEB-INF/tiles/tiles-definition.xml</beans:value> <!-- 이곳에서 tiles의 정의가 나옴 tile을 몇개를 쓸건지 -->
+	            <beans:value>/WEB-INF/views/**/views.xml</beans:value> <!--  ** 이것은 하위 차수는 상관 없다. 하위에 모가 오든 상관 없다. -->
+	        </beans:list>
+	    </beans:property>
+	</beans:bean>
+	
+	<!-- 인터셉터를 설정하는 방법 나중에 만들시 추가해줄것 지금은 없기때문에 오류가 나서 비워둠-->
+		
+	<!-- 스프링 jdbc 커넥션 풀과 관련 있음 -->	
+	<beans:bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource"> 
+	    <beans:property name="dataSourceName" value="ds"/>
+	    <beans:property name="URL" value="jdbc:oracle:thin:@192.168.8.17:1521:xe"/>
+	    <beans:property name="user" value="scott"/>
+	    <beans:property name="password" value="TIGER"/>
+    </beans:bean> 	
+    
+    <!-- 파일업로드 -->
+    <beans:bean id="multipartResolver"  
+  		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+  		
+  	<!-- 이메일 인증 -->
+    <beans:bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >
+	    <beans:property name="host" value="smtp.gmail.com" />
+	    <beans:property name="port" value="25" />
+	    <beans:property name="username" value="addy4709@gmail.com" />
+	    <beans:property name="password" value="dksendyd1234" />
+	    <beans:property name="defaultEncoding" value="utf-8"/>
+	    <beans:property name="javaMailProperties">
+	    <beans:props>
+	        <beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+	        <beans:prop key="mail.transport.protocol">smtp</beans:prop>
+			<beans:prop key="mail.smtp.auth">true</beans:prop>
+			<beans:prop key="mail.debug">true</beans:prop>
+	    </beans:props>
+	    </beans:property>
+	</beans:bean>
+	
+	<!-- Mybatics session객체를 얻어야많이 mybatics를 사용할 수 있음 일단 비워둠 오류가 나기때문에 나중에 사용시 채워둘것 -->
+	
+</beans:beans>
