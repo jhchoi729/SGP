@@ -20,6 +20,7 @@
 	
 	<!-- 패키지 경로 -->
     <context:component-scan base-package="org.kdea.spring.controller" />
+    <context:component-scan base-package="org.kdea.spring.member" />
   	
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
     <resources mapping="/resources/**" location="/resources/" />
@@ -71,8 +72,8 @@
     <beans:bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >
 	    <beans:property name="host" value="smtp.gmail.com" />
 	    <beans:property name="port" value="25" />
-	    <beans:property name="username" value="addy4709@gmail.com" />
-	    <beans:property name="password" value="dksendyd1234" />
+	    <beans:property name="username" value="rpgpsk0729@gmail.com" />
+	    <beans:property name="password" value="jhchoi729" />
 	    <beans:property name="defaultEncoding" value="utf-8"/>
 	    <beans:property name="javaMailProperties">
 	    <beans:props>
@@ -85,5 +86,13 @@
 	</beans:bean>
 	
 	<!-- Mybatics session객체를 얻어야많이 mybatics를 사용할 수 있음 일단 비워둠 오류가 나기때문에 나중에 사용시 채워둘것 -->
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="mapperLocations"
+			value="classpath:org/kdea/spring/member/*.xml" />
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
+	<beans:bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
+	</beans:bean>
 	
 </beans:beans>
